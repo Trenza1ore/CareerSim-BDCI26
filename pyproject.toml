@@ -1,0 +1,88 @@
+[project]
+name = "CareerSim-BDCI26"
+version = "0.0.0"
+description = "【华为openJiuwen】Agent 职场长程生存与晋升挑战（CCF BDCI 2026）：本赛题是一个面向 Agent 的职场模拟游戏。你要扮演一名刚入职业务研发组的员工，在 48 个月里处理剧情事件、分配季度体力、选择主行动，并努力在健康、尊严、技能、人脉、产出与财富之间维持一种勉强像样的平衡。"
+keywords = [
+    "python", "client", "agent", "llm", "openjiuwen", "jiuwenswarm", "skill",
+    "mcp", "mcp client", "mcp server", "fastmcp", "model context protocol",
+]
+readme = "README.md"
+requires-python = ">=3.11,<4"
+license = "MIT"
+authors = [
+    {name = "Hugo", email = "hugo@hugohuang.com"},
+    {name = "Yuwei", email = "yuwei.willow.z@gmail.com"},
+]
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3 :: Only',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Intended Audience :: Developers",
+    "Typing :: Typed",
+]
+dependencies = [
+    "career-emulator[mcp]",
+    "jiuwenswarm==0.2.1",
+]
+
+[dependency-groups]
+# Testing
+test = [
+    "pytest", "pytest-asyncio", "pytest-mock"
+]
+
+# Formatting
+format = [
+    "ruff",
+    "mypy",
+    "types-aiofiles",
+    "msgpack-types",
+]
+
+dev = [
+    { include-group = "test" },
+    { include-group = "format" },
+]
+
+[project.urls]
+Homepage = "https://www.xir.cn/competition/1165"
+Documentation = "https://career-emulator.readthedocs.io"
+Source = "https://github.com/Trenza1ore/CareerSim-BDCI26"
+Gitcode = "https://gitcode.com/SushiNinja/CareerSim-BDCI26"
+
+[project.scripts]
+career-sim-runner = "career_sim_runner.cli:main"
+
+[tool.uv]
+default-groups = ['dev']
+
+[tool.setuptools.package-data]
+career_emulator = ["py.typed", "career_emulator/data/.gitkeep"]
+career_sim_runner = ["prompts/*.md"]
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+addopts = ["-v"]
+
+# Formatting
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.pylint.MAIN]
+ignore-paths = ["^(examples|tests|docs|scripts)/.*"]
+py-version = "3.11"
+
+[tool.pylint.FORMAT]
+max-line-length = 120
