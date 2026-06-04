@@ -23,13 +23,10 @@ def resolve_skills_root(submission_dir: Path) -> Path:
 
 
 def load_manifest(submission_dir: Path) -> dict[str, Any]:
-    """Load submission metadata from ``manifest.json`` or a legacy fallback."""
+    """Load submission metadata from ``manifest.json``."""
     manifest_path = submission_dir / "manifest.json"
     if manifest_path.is_file():
         return json.loads(manifest_path.read_text(encoding="utf-8"))
-    legacy_manifest_path = submission_dir / "skills_manifest.json"
-    if legacy_manifest_path.is_file():
-        return json.loads(legacy_manifest_path.read_text(encoding="utf-8"))
     return {}
 
 
@@ -82,8 +79,8 @@ def _is_skill_bundle(root: Path) -> bool:
 
 def _validate_skill_bundle(root: Path) -> None:
     """Validate the real SKILL.md-based submission bundle."""
-    if not (root / "README.md").is_file():
-        msg = f"Missing submission README at {root / 'README.md'}"
+    if not (root / "manifest.json").is_file():
+        msg = f"Missing submission manifest.json at {root / 'manifest.json'}"
         raise SubmissionError(msg)
     skills_dir = root / "skills"
     if not skills_dir.is_dir():
