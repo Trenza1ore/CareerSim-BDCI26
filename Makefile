@@ -1,4 +1,3 @@
-# Copyright (c) Hugo Huang. 2026.
 .PHONY: format lint docstring sync test setup run score
 .DEFAULT_GOAL := sync
 
@@ -6,7 +5,7 @@
 
 # Install dependencies
 sync:
-	uv sync --prerelease=allow
+	uv sync
 
 # Setup environment variables and mcp config
 setup:
