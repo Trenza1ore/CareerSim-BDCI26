@@ -1,10 +1,14 @@
-# 【华为 openJiuwen】Agent 职场长程生存与晋升挑战（CCF BDCI 2026）
+# 【华为 openJiuwen】职场长程生存与晋升挑战（CCF BDCI 2026）
 
-本赛题是一个面向 Agent 的职场模拟游戏。你要扮演一名刚入职业务研发组的员工，在 48 个月里处理剧情事件、分配季度体力、选择主行动，并努力在健康、尊严、技能、人脉、产出与财富之间维持一种勉强像样的平衡。
+[![Documentation](https://img.shields.io/badge/赛题文档-brown?style=for-the-badge&logo=readthedocs&link=https%3A%2F%2Fcareer-emulator.readthedocs.io%2Fen%2Flatest%2Findex.html)](https://career-emulator.readthedocs.io)
+
+本赛题是一个面向 Agent 的职场模拟游戏。你要扮演一名刚入职业务研发组的员工，在 48 个月里处理剧情事件、分配季度体力、选择主行动，并努力在健康、尊严、技能、人脉、产出与财富之间维系脆弱的平衡。
 
 赛题官方页面：<https://www.xir.cn/competition/1165>
 
 赛题文档网址：<https://career-emulator.readthedocs.io>
+
+模拟器源码仓：<https://github.com/Trenza1ore/TomatoEmulator>
 
 ## 前置工具
 
@@ -35,9 +39,9 @@
 make sync
 ```
 
-该命令会安装 [`career-emulator[mcp]`](https://pypi.org/project/career-emulator/)、`uv`，并同步本项目的全部依赖。
+该命令会安装 [career-emulator](https://pypi.org/project/career-emulator/)、`uv`，并同步本项目的全部依赖。
 
-> **建议**：[`jiuwenswarm`](https://openjiuwen.com/jiuwenswarm) 和 [`career-emulator`](https://pypi.org/project/career-emulator/) 都通过当前仓库目录的 [uv](https://docs.astral.sh/uv/) 虚拟环境管理，所有命令统一使用 `uv run` 前缀调用。请避免将它们安装到全局 Python 环境或其他 virtualenv 中，以免版本冲突。
+> **建议**：[jiuwenswarm](https://openjiuwen.com/jiuwenswarm) 和 [career-emulator](https://pypi.org/project/career-emulator/) 都通过当前仓库目录的 [uv](https://docs.astral.sh/uv/) 虚拟环境管理，所有命令统一使用 `uv run` 前缀调用。请避免将它们安装到全局 Python 环境或其他虚拟环境中，以免冲突。
 
 ### 2. 配置环境
 
@@ -86,7 +90,7 @@ career_emu   running  58987   /Users/you/.jiuwenswarm-instances/career_emu      
 
 其中 `PORTS` 列的最后一个端口是前端 UI 地址。例如上面 `career_emu` 实例的端口为 `6173`，在浏览器访问 `http://localhost:6173` 即可打开 JiuwenSwarm 网页端界面。
 
-### 4. 跑一局
+### 4. 玩上一局
 
 ```bash
 make play
@@ -102,13 +106,11 @@ make score
 
 每个月，系统会推进时间、生成剧情事件，并让你基于当前状态做选择。每逢季度末，你还会拿到 3 点 `Energy` 处理体力行动，再额外选择 1 个季度主行动。每 6 个月进行一次绩效评估并结算绩效奖金。
 
-三件事先搞懂：
-
 - **剧情选择** 决定短期状态变化，也会改变后续事件走向。
 - **季度行动** 是你主动调节职业轨迹的主要抓手。
-- **这是长线题**，很多风险不会当月就爆，往往是攒着以后一起算总账。
+- **长线规划** 很多风险不会当月就爆，往往是攒着以后一起算总账。
 
-整局游戏总长 48 个月。活满 48 个月后，系统会综合职级、财富、身心状态、技能、风险控制和同事关系给出结局评分（S 到 D）。
+整局游戏总长 48 个月。活满 48 个月后，系统会综合职级、财富、身心状态、技能、风险控制和同事关系给出结局评分（从 D 到 S）。
 
 ## 交付件
 
@@ -151,20 +153,17 @@ solution/
 | `agent.fast` | 快速模式。卸载任务规划和子代理等重编排能力，保留通用工具和技能调用，侧重快速响应。使用被动记忆，按需读写。 |
 | `code.team` | 团队协作模式。以 Code 模式启动多 Agent 协作，Leader 统筹任务拆解与调度，Teammate 按角色分工并行执行。团队成员继承项目目录、代码工具和 MCP 能力，因此适合需要调用 MCP 工具（如本赛题的 `career-emulator`）的多 Agent 协同场景。|
 
-## CLI 命令
+## 一些方便的 Makefile 命令
 
-本项目通过 `career_sim_runner` 提供完整的参赛命令行：
+| 说明 | Makefile 快捷命令 |
+|---|---|
+| 通过 `uv` 安装项目依赖 | `make sync` |
+| 初始化环境、配置 JiuwenSwarm 实例 | `make setup` |
+| 启动 JiuwenSwarm 服务（`career_emu` 实例） | `make start-jiuwen` |
+| 挂载当前 `solution` 文件夹内的技能、并连接 JiuwenSwarm 进行一局游戏 | `make play` |
+| 重新读取上次运行的结局分数 | `make score` |
 
-| 命令 | 说明 | Makefile 快捷方式 |
-|---|---|---|
-| `setup` | 初始化环境、配置 JiuwenSwarm 实例 | `make setup` |
-| — | 启动 JiuwenSwarm `career_emu` 实例 | `make start-jiuwen` |
-| `play-headless` | 安装技能、启动 JiuwenSwarm 完成整局游戏 | `make play` |
-| `score` | 重新读取上次运行的结局分数 | `make score` |
-| `validate` | 校验提交件目录结构和本地环境 | — |
-| `install` | 仅安装提交件到 JiuwenSwarm 实例 | — |
-
-直接使用 CLI 的方式（以 validate 为例）：
+也可直接使用 `career_sim_runner` 的 CLI 接口（以验证 `solution` 内容的 validate 命令为例）：
 
 ```bash
 uv run python -m career_sim_runner validate --submission solution
@@ -172,11 +171,11 @@ uv run python -m career_sim_runner validate --submission solution
 
 ## 运行产物
 
-每次运行的产物写在 `.career_sim_runner/career_emu/` 下：
+每次运行产生的输出均会出现在 `.career_sim_runner/career_emu/` 目录下：
 
 ```text
 .career_sim_runner/career_emu/
-  active_install.json        # 当前已安装提交件
+  active_install.json        # 当前挂载的提交件
   career_emulator.sqlite3    # 共享状态数据库
   emulator_logs/             # Career Emulator 日志
   outputs/
@@ -189,7 +188,7 @@ uv run python -m career_sim_runner validate --submission solution
 
 ## 比赛交互方式
 
-比赛通过 [career-emulator](https://pypi.org/project/career-emulator/) [MCP](https://modelcontextprotocol.io) 与 Agent 交互。常用能力包括：
+比赛通过 [career-emulator](https://pypi.org/project/career-emulator/) 提供的 [MCP](https://modelcontextprotocol.io) 服务与 Agent 交互。常用能力包括：
 
 - `new_game`：开一局新游戏。
 - `observe(session_id)`：读取当前状态、当前事件和可选项。
