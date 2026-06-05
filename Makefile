@@ -1,5 +1,5 @@
-.PHONY: format lint docstring sync test setup run score
-.DEFAULT_GOAL := sync
+.PHONY: format lint docstring check test sync setup play score start-jiuwen
+.DEFAULT_GOAL := setup
 
 # ----- Useful for participants of the competition -----
 
