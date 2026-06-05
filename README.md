@@ -1,6 +1,6 @@
 # 【华为 openJiuwen】职场长程生存与晋升挑战（CCF BDCI 2026）
 
-[![Documentation](https://img.shields.io/badge/赛题文档-brown?style=for-the-badge&logo=readthedocs&link=https%3A%2F%2Fcareer-emulator.readthedocs.io%2Fen%2Flatest%2Findex.html)](https://career-emulator.readthedocs.io)
+[![Documentation](https://img.shields.io/badge/赛题文档-blue?style=for-the-badge&logo=readthedocs&link=https%3A%2F%2Fcareer-emulator.readthedocs.io%2Fen%2Flatest%2Findex.html)](https://career-emulator.readthedocs.io) [![GitCode Dev](https://img.shields.io/badge/%E5%BC%80%E5%8F%91%E7%94%A8GitCode%E4%BB%93-brown?style=for-the-badge&logo=GitCode)](https://gitcode.com/SushiNinja/CareerSim-BDCI26) [![Static Badge](https://img.shields.io/badge/%E5%BC%80%E5%8F%91%E7%94%A8GitHub%E4%BB%93-black?style=for-the-badge&logo=GitHub)](https://github.com/Trenza1ore/CareerSim-BDCI26)
 
 本赛题是一个面向 Agent 的职场模拟游戏。你要扮演一名刚入职业务研发组的员工，在 48 个月里处理剧情事件、分配季度体力、选择主行动，并努力在健康、尊严、技能、人脉、产出与财富之间维系脆弱的平衡。
 

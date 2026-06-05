@@ -219,3 +219,7 @@ __marimo__/
 
 # Env vars
 .env
+
+# Output & submission for CareerSim-BDCI26
+.career_sim_runner/
+solution/

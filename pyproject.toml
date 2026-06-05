@@ -28,7 +28,9 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "career-emulator[mcp]",
+    "pip",
+    "fastmcp>=2,<3",
+    "career-emulator[bdci]",
     "jiuwenswarm==0.2.1",
 ]
 

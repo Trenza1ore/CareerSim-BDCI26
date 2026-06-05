@@ -13,7 +13,7 @@ setup:
 
 # Play a game with current solution
 play:
-	@uv pip install -U "career-emulator[mcp]"
+	@uv pip install -U career-emulator-bdci26
 	uv run python -m career_sim_runner play-headless --submission solution
 
 # Check last run's score

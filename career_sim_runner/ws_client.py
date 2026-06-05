@@ -189,8 +189,10 @@ async def reload_agent_config(ws_url: str, timeout_s: float = 15.0) -> bool:
                     body = frame.get("body", frame)
                     result = body.get("result", body)
                     return bool(str(result.get("reloaded")).lower() in ["true", "1", "yes", "ok"])
-    except Exception:  # pylint: disable=broad-exception-caught
-        return False
+    except Exception as e:  # pylint: disable=broad-exception-caught
+        raise ConnectionError(
+            "\033[41mFailed to reload JiuwenSwarm agent config, is the service started?\033[0m"
+        ) from e
     return False
 
 
