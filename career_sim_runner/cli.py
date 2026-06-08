@@ -20,6 +20,7 @@ from career_sim_runner.paths import (
     ensure_runtime_dirs,
     latest_output_dir,
 )
+from career_sim_runner.replay import build_replay_report, write_replay_report
 from career_sim_runner.report import format_score_report, format_validation_report
 from career_sim_runner.score import build_score_report, write_score_report
 from career_sim_runner.setup import (
@@ -89,6 +90,14 @@ def _parse_args() -> argparse.Namespace:
     )
 
     subparsers.add_parser("score", help="Re-read objective score from the last play run")
+
+    replay_parser = subparsers.add_parser("replay", help="Render a readable markdown report from events JSONL")
+    replay_parser.add_argument("--events", default="", help="Path to events-*.jsonl (defaults to last run)")
+    replay_parser.add_argument(
+        "--output",
+        default="",
+        help="Output markdown path (defaults to replay-<timestamp>.md beside the events log)",
+    )
 
     return parser.parse_args()
 
@@ -163,6 +172,25 @@ def main() -> int:
         report_path = write_score_report(score_report, output_dir)
         print(format_score_report(score_report))
         print(f"report_path: {report_path}")
+        return 0
+
+    if args.command == "replay":
+        events_path: Path | None
+        if args.events:
+            events_path = Path(args.events)
+        else:
+            install_record = load_active_install()
+            output_dir = load_last_output_dir()
+            if output_dir is None and install_record is not None:
+                output_dir = latest_output_dir(install_record.submission_name)
+            events_path = _find_latest(output_dir, "events-*.jsonl") if output_dir else None
+        if events_path is None or not events_path.is_file():
+            print("No events log found. Run play-headless first or pass --events.")
+            return 1
+        output_path = Path(args.output) if args.output else None
+        report_path = write_replay_report(events_path, output_path)
+        print(build_replay_report(events_path))
+        print(f"replay_path: {report_path}")
         return 0
 
     return 1
