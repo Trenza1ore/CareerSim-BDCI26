@@ -13,6 +13,7 @@ def fixture_submission() -> Path:
 def test_install_submission_generates_skill(tmp_path: Path) -> None:
     """Installing a real submission should mirror only participant skills."""
     skills_dir = tmp_path / "skills"
+    (tmp_path / "memory").mkdir()
     record = install_submission(fixture_submission(), skills_dir=skills_dir)
 
     assert Path(record.skill_dir) == skills_dir
