@@ -3,6 +3,7 @@
 import asyncio
 import inspect
 from pathlib import Path
+from typing import cast
 
 from career_sim_runner.mcp_config import config_mentions_career_emulator, env_mentions_db
 from career_sim_runner.models import ValidationReport
@@ -63,14 +64,14 @@ async def validate_environment(ws_url: str | None = None, db_path: Path | None =
 
     report.add(
         "career-emulator-mcp",
-        tool_is_available["career-emulator-mcp"],
+        cast(bool, tool_is_available["career-emulator-mcp"]),
         "career-emulator-mcp is available on PATH"
         if tool_is_available["career-emulator-mcp"]
         else "career-emulator-mcp is not on PATH",
     )
     report.add(
         "jiuwenswarm-start",
-        tool_is_available["jiuwenswarm-start"],
+        cast(bool, tool_is_available["jiuwenswarm-start"]),
         "jiuwenswarm-start is available on PATH"
         if tool_is_available["jiuwenswarm-start"]
         else "jiuwenswarm-start is not on PATH",

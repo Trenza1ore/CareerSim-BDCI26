@@ -20,6 +20,10 @@ play:
 score:
 	uv run python -m career_sim_runner score
 
+# Render readable markdown from the last run's events log
+replay:
+	uv run python -m career_sim_runner replay --live
+
 # Start JiuwenSwarm instance in current terminal
 start-jiuwen:
 	uv run jiuwenswarm-start --name career_emu all

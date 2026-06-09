@@ -140,7 +140,7 @@ def setup_summary() -> dict[str, str]:
 
 
 @lru_cache(maxsize=1)
-def tool_availability() -> dict[str, bool]:
+def tool_availability() -> dict[str, bool | str]:
     """Return whether key local commands are available."""
     jiuwenswarm_path = shutil.which("jiuwenswarm-start")
     cwd = (jiuwenswarm_path or "").removesuffix("jiuwenswarm-start")

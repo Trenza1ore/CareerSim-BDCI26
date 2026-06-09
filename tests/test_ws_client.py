@@ -33,7 +33,7 @@ def test_build_play_prompt_includes_manifest_instruction() -> None:
 
 def test_resolve_run_mode_uses_manifest_value() -> None:
     """Supported manifest modes should flow through to the websocket payload."""
-    assert resolve_run_mode(_install_record(mode="team")) == "team"
+    assert resolve_run_mode(_install_record(mode="code.team")) == "code.team"
 
 
 def test_resolve_run_mode_rejects_unsupported() -> None:
