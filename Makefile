@@ -1,6 +1,5 @@
-# Copyright (c) Hugo Huang. 2026.
-.PHONY: format lint docstring sync test setup run score
-.DEFAULT_GOAL := sync
+.PHONY: format lint docstring check test sync setup play score start-jiuwen
+.DEFAULT_GOAL := setup
 
 # ----- Useful for participants of the competition -----
 
@@ -14,16 +13,12 @@ setup:
 
 # Play a game with current solution
 play:
-	uv sync --upgrade-package career-emulator-bdci26
+	@uv pip install -U career-emulator-bdci26
 	uv run python -m career_sim_runner play-headless --submission solution
 
 # Check last run's score
 score:
 	uv run python -m career_sim_runner score
-
-# Render readable markdown from the last run's events log
-replay:
-	uv run python -m career_sim_runner replay
 
 # Start JiuwenSwarm instance in current terminal
 start-jiuwen:
