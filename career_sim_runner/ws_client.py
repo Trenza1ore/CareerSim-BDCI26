@@ -12,7 +12,7 @@ import websockets
 
 from career_sim_runner.models import InstallRecord, TokenUsage
 from career_sim_runner.skill_contract import SubmissionError
-from career_sim_runner.transcript import StreamCollector, _walk
+from career_sim_runner.transcript import EventCallback, StreamCollector, _walk
 from career_sim_runner.utils import normalize_text
 
 SESSION_ID_RE = re.compile(r"SESSION_ID=([0-9a-fA-F]{8,})")
@@ -208,9 +208,21 @@ def _has_ended(game: _GameState, transcript: str) -> bool:
     return "DONE" in transcript
 
 
-async def drive(ws_url: str, prompt: str, session_id: str, mode: str, timeout_s: float, log_dir: Path) -> DriveResult:
-    """Send one streaming play prompt and collect structured logs."""
-    collector = StreamCollector(log_dir=log_dir)
+async def drive(
+    ws_url: str,
+    prompt: str,
+    session_id: str,
+    mode: str,
+    timeout_s: float,
+    log_dir: Path,
+    on_event: EventCallback | None = None,
+) -> DriveResult:
+    """Send one streaming play prompt and collect structured logs.
+
+    :param on_event: Optional callback invoked for each structured event
+        record written by the collector (tool_call, tool_result, usage, etc.).
+    """
+    collector = StreamCollector(log_dir=log_dir, on_event=on_event)
     game = _GameState()
     exit_code = 0
     continue_prompt = _load_prompt_template("play_headless_continue.md")

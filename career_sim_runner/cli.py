@@ -21,6 +21,7 @@ from career_sim_runner.paths import (
     latest_output_dir,
 )
 from career_sim_runner.replay import build_replay_report, print_replay_rich, write_replay_report
+from career_sim_runner.replay.live import LiveReplayObserver
 from career_sim_runner.report import format_score_report, format_validation_report
 from career_sim_runner.score import build_score_report, write_score_report
 from career_sim_runner.setup import (
@@ -77,7 +78,7 @@ def _parse_args() -> argparse.Namespace:
     install_parser = subparsers.add_parser("install", help="Install submission into JiuwenSwarm")
     install_parser.add_argument("--submission", required=True, help="Submission directory containing skills/")
 
-    play_parser = subparsers.add_parser("play-headless", help="Install, run JiuwenSwarm, and score")
+    play_parser = subparsers.add_parser("play", help="Install, run JiuwenSwarm, and score")
     play_parser.add_argument("--submission", default="", help="Submission directory containing skills/")
     play_parser.add_argument("--ws-url", default="")
     play_parser.add_argument("--db", default=str(default_db_path()))
@@ -87,6 +88,12 @@ def _parse_args() -> argparse.Namespace:
         dest="continue_run",
         action="store_true",
         help="Reuse the previous JiuwenSwarm conversation instead of starting a fresh one",
+    )
+    play_parser.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        help="Do not output to the terminal as the game is played",
     )
 
     subparsers.add_parser("score", help="Re-read objective score from the last play run")
@@ -140,16 +147,22 @@ def main() -> int:
         _print_json(record.to_dict())
         return 0
 
-    if args.command == "play-headless":
+    if args.command == "play":
         submission = Path(args.submission) if args.submission else None
         resolved_ws_url = args.ws_url or resolve_instance_ws_url()
+        observer: LiveReplayObserver | None = None
+        if not args.quiet:
+            observer = LiveReplayObserver()
         play_report, report_path = headless_play_main(
             submission_dir=submission,
             ws_url=resolved_ws_url,
             db_path=Path(args.db),
             timeout_s=args.timeout_s,
             continue_run=args.continue_run,
+            on_event=observer.feed if observer else None,
         )
+        if observer is not None:
+            observer.finish()
         print(format_score_report(play_report))
         print(f"report_path: {report_path}")
         return 0 if play_report.play_exit_code == 0 else 1
@@ -157,11 +170,11 @@ def main() -> int:
     if args.command == "score":
         install_record = load_active_install()
         if install_record is None:
-            print("No active install found. Run install or play-headless first.")
+            print("No active install found. Run install or play first.")
             return 1
         output_dir = load_last_output_dir() or latest_output_dir(install_record.submission_name)
         if output_dir is None:
-            print("No previous output directory found. Run play-headless first.")
+            print("No previous output directory found. Run play first.")
             return 1
         drive_session_id = load_last_drive_session_id() or ""
         transcript_path = _find_latest(output_dir, "transcript-*.log")
@@ -195,7 +208,7 @@ def main() -> int:
                 output_dir = latest_output_dir(install_record.submission_name)
             events_path = _find_latest(output_dir, "events-*.jsonl") if output_dir else None
         if events_path is None or not events_path.is_file():
-            print("No events log found. Run play-headless first or pass --events.")
+            print("No events log found. Run play first or pass --events.")
             return 1
         if args.live:
             print_replay_rich(events_path, wait_s=args.wait)

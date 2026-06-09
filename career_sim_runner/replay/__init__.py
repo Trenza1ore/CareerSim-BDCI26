@@ -1,5 +1,6 @@
 """Build a readable play-by-play report from structured events logs."""
 
+from career_sim_runner.replay.live import LiveReplayObserver
 from career_sim_runner.replay.models import DecisionTurn, GameChoice, ObserveSnapshot
 from career_sim_runner.replay.parse import parse_events_log
 from career_sim_runner.replay.render import (
@@ -19,6 +20,7 @@ from career_sim_runner.replay.usage import (
 __all__ = [
     "DecisionTurn",
     "GameChoice",
+    "LiveReplayObserver",
     "ObserveSnapshot",
     "build_replay_report",
     "load_ending_score",

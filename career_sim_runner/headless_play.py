@@ -18,6 +18,7 @@ from career_sim_runner.paths import (
 )
 from career_sim_runner.score import build_score_report, write_score_report
 from career_sim_runner.setup import resolve_instance_ws_url
+from career_sim_runner.transcript import EventCallback
 from career_sim_runner.validate import validate_environment, validate_submission
 from career_sim_runner.ws_client import (
     build_continue_prompt,
@@ -83,8 +84,14 @@ async def play_headless(
     db_path: Path | None = None,
     timeout_s: float = DEFAULT_TIMEOUT_S,
     continue_run: bool = False,
+    on_event: EventCallback | None = None,
 ) -> tuple[ScoreReport, Path]:
-    """Install, drive, and score one participant submission."""
+    """Install, drive, and score one participant submission.
+
+    :param on_event: Optional callback invoked for each structured event
+        as it is written during the play session.  Pass
+        :meth:`LiveReplayObserver.feed` for real-time rich output.
+    """
     ensure_runtime_dirs()
     resolved_ws_url = ws_url or resolve_instance_ws_url()
     resolved_db_path = db_path or default_db_path()
@@ -132,6 +139,7 @@ async def play_headless(
         mode=mode,
         timeout_s=timeout_s,
         log_dir=output_dir,
+        on_event=on_event,
     )
     report = await build_score_report(
         install_record=install_record,
@@ -154,6 +162,7 @@ def main(
     db_path: Path | None = None,
     timeout_s: float = DEFAULT_TIMEOUT_S,
     continue_run: bool = False,
+    on_event: EventCallback | None = None,
 ) -> tuple[ScoreReport, Path]:
     """Sync entrypoint for headless play."""
     return asyncio.run(
@@ -163,5 +172,6 @@ def main(
             db_path=db_path,
             timeout_s=timeout_s,
             continue_run=continue_run,
+            on_event=on_event,
         )
     )

@@ -14,7 +14,7 @@ setup:
 # Play a game with current solution
 play:
 	@uv pip install -U career-emulator-bdci26
-	uv run python -m career_sim_runner play-headless --submission solution
+	uv run python -m career_sim_runner play --submission solution
 
 # Check last run's score
 score:
@@ -32,7 +32,7 @@ start-jiuwen:
 
 # Resume an unfinished game
 resume:
-	uv run python -m career_sim_runner play-headless --submission solution --continue
+	uv run python -m career_sim_runner play --submission solution --continue
 
 # Format code with ruff
 format:

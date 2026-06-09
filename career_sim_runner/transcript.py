@@ -4,9 +4,11 @@ import json
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from career_sim_runner.models import TokenUsage
+
+EventCallback = Callable[[dict[str, Any]], None]
 
 
 def _walk(obj: Any) -> list[dict[str, Any]]:
@@ -45,6 +47,7 @@ class StreamCollector:
     """Structured collector for one agent session."""
 
     log_dir: Path
+    on_event: EventCallback | None = None
     totals: TokenUsage = field(default_factory=TokenUsage)
     transcript: str = ""
     events_path: Path | None = None
@@ -71,6 +74,8 @@ class StreamCollector:
         assert self.events_path is not None
         with self.events_path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+        if self.on_event is not None:
+            self.on_event(record)
 
     def _absorb_usage(self, usage: dict[str, Any], model: str) -> None:
         """Add one usage block into running totals."""

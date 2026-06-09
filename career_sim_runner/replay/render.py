@@ -179,8 +179,16 @@ def render_replay_rich(
 
         if i < len(turns) - 1:
             if wait_s is None:
-                console.print(Text("按 Enter 继续 >>>", style="dim italic"), end="")
-                input()
+                prompt = "按 Enter 继续，或输入等待秒数（如 1.2）>>> "
+                console.print(Text(prompt, style="dim italic"), end="")
+                user_input = input().strip()
+                if user_input:
+                    if user_input.replace(".", "").isdecimal():
+                        wait_s = float(user_input)
+                    elif user_input.lower().removesuffix("()") in ["q", "quit", "exit"]:
+                        return
+                    else:
+                        console.print(Text(f'非法输入："{user_input}"', style="red bold"))
             elif wait_s > 0:
                 time.sleep(wait_s)
 
