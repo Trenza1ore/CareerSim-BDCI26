@@ -207,4 +207,12 @@ def parse_events_log(events_path: Path) -> tuple[str | None, list[DecisionTurn],
                     misc_calls.append(short_name)
                 seen_call_ids.add(tool_call_id)
 
+    if pending_observe is not None and (pending_observe.ending_score or pending_observe.failed):
+        turns.append(
+            DecisionTurn(
+                step=len(turns) + 1,
+                observe=pending_observe,
+            )
+        )
+
     return session_id, turns, misc_calls

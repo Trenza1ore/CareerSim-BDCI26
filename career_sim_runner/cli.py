@@ -20,7 +20,7 @@ from career_sim_runner.paths import (
     ensure_runtime_dirs,
     latest_output_dir,
 )
-from career_sim_runner.replay import build_replay_report, write_replay_report
+from career_sim_runner.replay import build_replay_report, print_replay_rich, write_replay_report
 from career_sim_runner.report import format_score_report, format_validation_report
 from career_sim_runner.score import build_score_report, write_score_report
 from career_sim_runner.setup import (
@@ -97,6 +97,17 @@ def _parse_args() -> argparse.Namespace:
         "--output",
         default="",
         help="Output markdown path (defaults to replay-<timestamp>.md beside the events log)",
+    )
+    replay_parser.add_argument(
+        "--live",
+        action="store_true",
+        help="Render a rich live replay to the terminal instead of writing markdown",
+    )
+    replay_parser.add_argument(
+        "--wait",
+        type=float,
+        default=None,
+        help="Seconds to wait between turns in --live mode (default: None)",
     )
 
     return parser.parse_args()
@@ -186,6 +197,9 @@ def main() -> int:
         if events_path is None or not events_path.is_file():
             print("No events log found. Run play-headless first or pass --events.")
             return 1
+        if args.live:
+            print_replay_rich(events_path, wait_s=args.wait)
+            return 0
         output_path = Path(args.output) if args.output else None
         report_path = write_replay_report(events_path, output_path)
         print(build_replay_report(events_path))

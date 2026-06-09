@@ -22,7 +22,7 @@ score:
 
 # Render readable markdown from the last run's events log
 replay:
-	uv run python -m career_sim_runner replay
+	uv run python -m career_sim_runner replay --live
 
 # Start JiuwenSwarm instance in current terminal
 start-jiuwen:

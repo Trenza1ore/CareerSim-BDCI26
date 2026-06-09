@@ -534,6 +534,7 @@ dependencies = [
     { name = "fastmcp" },
     { name = "jiuwenswarm" },
     { name = "pip" },
+    { name = "rich" },
 ]
 
 [package.dev-dependencies]
@@ -564,6 +565,7 @@ requires-dist = [
     { name = "fastmcp", specifier = ">=2,<3" },
     { name = "jiuwenswarm", specifier = "==0.2.1" },
     { name = "pip" },
+    { name = "rich", specifier = ">=13" },
 ]
 
 [package.metadata.requires-dev]
