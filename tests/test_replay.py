@@ -89,7 +89,16 @@ def test_build_replay_report_renders_markdown(tmp_path: Path) -> None:
                 {
                     "current_state": {
                         "time": {"current_month": 2, "current_quarter": 1, "current_year": 1},
-                        "status": {"level": "L1", "health": 4, "dignity": 6, "skill": 2, "network": 1, "output": 0, "wealth": 1, "energy": 3},
+                        "status": {
+                            "level": "L1",
+                            "health": 4,
+                            "dignity": 6,
+                            "skill": 2,
+                            "network": 1,
+                            "output": 0,
+                            "wealth": 1,
+                            "energy": 3,
+                        },
                         "simulation_flags": {"alive": True, "failed": False, "failure_reason": None},
                     },
                     "current_event": {"title": "季度汇报", "description": "高管在场。"},

@@ -175,7 +175,6 @@ def main() -> int:
         return 0
 
     if args.command == "replay":
-        events_path: Path | None
         if args.events:
             events_path = Path(args.events)
         else:

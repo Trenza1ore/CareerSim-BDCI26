@@ -1,7 +1,5 @@
 """Build a readable play-by-play report from structured events logs."""
 
-from __future__ import annotations
-
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -171,7 +169,11 @@ def _format_status(status: dict[str, Any]) -> str:
 
 
 def parse_events_log(events_path: Path) -> tuple[str | None, list[DecisionTurn], list[str]]:
-    """Parse one events JSONL file into session metadata and decision turns."""
+    """Parse one events JSONL file into session metadata and decision turns.
+
+    :param events_path: Path to the events ``.jsonl`` log file.
+    :return: A tuple of ``(session_id, turns, misc_calls)``.
+    """
     session_id: str | None = None
     turns: list[DecisionTurn] = []
     misc_calls: list[str] = []
@@ -259,7 +261,14 @@ def render_replay_markdown(
     turns: list[DecisionTurn],
     misc_calls: list[str] | None = None,
 ) -> str:
-    """Render a readable markdown battle report."""
+    """Render a readable markdown battle report.
+
+    :param events_path: Path to the source events log (shown in the header).
+    :param session_id: Game session identifier, or ``None`` if unknown.
+    :param turns: Ordered list of decision turns to render.
+    :param misc_calls: Optional extra MCP tool names to list at the end.
+    :return: The complete markdown string.
+    """
     lines = [
         "# Career Simulator 战报",
         "",
@@ -309,7 +318,8 @@ def render_replay_markdown(
         lines.append("")
 
         if observe.ending_score:
-            lines.extend(["## 结局评分", "", "```json", json.dumps(observe.ending_score, ensure_ascii=False, indent=2), "```", ""])
+            score_json = json.dumps(observe.ending_score, ensure_ascii=False, indent=2)
+            lines.extend(["## 结局评分", "", "```json", score_json, "```", ""])
         if observe.failed:
             reason = observe.failure_reason or "未知原因"
             lines.extend(["", f"> **出局:** {reason}", ""])
@@ -322,13 +332,22 @@ def render_replay_markdown(
 
 
 def build_replay_report(events_path: Path) -> str:
-    """Parse one events log and return markdown."""
+    """Parse one events log and return markdown.
+
+    :param events_path: Path to the events ``.jsonl`` log file.
+    :return: Rendered markdown report string.
+    """
     session_id, turns, misc_calls = parse_events_log(events_path)
     return render_replay_markdown(events_path, session_id, turns, misc_calls)
 
 
 def write_replay_report(events_path: Path, output_path: Path | None = None) -> Path:
-    """Write a replay markdown file next to the events log by default."""
+    """Write a replay markdown file next to the events log by default.
+
+    :param events_path: Path to the events ``.jsonl`` log file.
+    :param output_path: Destination path; defaults to a sibling file derived from *events_path*.
+    :return: The path the report was written to.
+    """
     markdown = build_replay_report(events_path)
     if output_path is None:
         output_path = events_path.with_name(events_path.name.replace("events-", "replay-").replace(".jsonl", ".md"))
