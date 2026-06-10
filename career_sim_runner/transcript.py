@@ -27,19 +27,19 @@ def _walk(obj: Any) -> list[dict[str, Any]]:
 
 def _extract_text(frame: dict[str, Any]) -> str:
     """Extract text-like payload fragments from one frame."""
-    parts: list[str] = []
     for node in _walk(frame):
         for key in ("text", "content", "delta"):
             value = node.get(key)
-            if isinstance(value, str):
-                parts.append(value)
+            if isinstance(value, str) and value.strip():
+                if key != "delta":
+                    value += "\n"
+                return value
     body = frame.get("body")
+    if isinstance(body, str):
+        return body
     if isinstance(body, dict):
-        for key in ("text", "content", "message"):
-            value = body.get(key)
-            if isinstance(value, str):
-                parts.append(value)
-    return "".join(parts)
+        return _extract_text(body)
+    return ""
 
 
 @dataclass
@@ -100,8 +100,6 @@ class StreamCollector:
         assert self.transcript_path is not None
         with self.transcript_path.open("a", encoding="utf-8") as handle:
             handle.write(chunk)
-            if force and not chunk.endswith("\n"):
-                handle.write("\n")
 
     def feed_frame(self, frame: dict[str, Any]) -> None:
         """Ingest one decoded WebSocket frame."""

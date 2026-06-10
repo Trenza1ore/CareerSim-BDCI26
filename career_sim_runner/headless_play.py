@@ -125,10 +125,10 @@ async def play_headless(
             or latest_output_dir(install_record.submission_name)
             or timestamped_output_dir(install_record.submission_name)
         )
-        prompt = build_continue_prompt()
+        prompt = build_continue_prompt(None)
     else:
         output_dir = timestamped_output_dir(install_record.submission_name)
-        prompt = build_play_prompt(install_record)
+        prompt = build_play_prompt()
 
     store_last_output_dir(output_dir)
     mode = resolve_run_mode(install_record)

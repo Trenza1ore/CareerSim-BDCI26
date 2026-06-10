@@ -1,5 +1,7 @@
 """Tests for headless JiuwenSwarm websocket helpers."""
 
+from pathlib import Path
+
 import pytest
 
 from career_sim_runner.models import InstallRecord
@@ -22,13 +24,11 @@ def _install_record(*, mode: str = "agent.plan", instruction: str = "") -> Insta
     )
 
 
-def test_build_play_prompt_includes_manifest_instruction() -> None:
-    """Prompt rendering should append extra manifest instructions when present."""
-    prompt = build_play_prompt(_install_record(instruction="Prefer conservative actions when unsure."))
-    assert "monthly-action-decision" in prompt
-    assert "report-generation" in prompt
-    assert "Specified Instructions" in prompt
-    assert "Prefer conservative actions when unsure." in prompt
+def test_build_play_prompt() -> None:
+    """Play prompt is now static; skills/instruction live in IDENTITY.md."""
+    prompt = build_play_prompt()
+    static_prompt_file = Path(__file__).parent.with_name("career_sim_runner") / "prompts" / "play_headless.md"
+    assert prompt.strip() == static_prompt_file.read_text(encoding="utf-8").strip()
 
 
 def test_resolve_run_mode_uses_manifest_value() -> None:
