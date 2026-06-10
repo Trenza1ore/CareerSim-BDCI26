@@ -12,6 +12,7 @@ from career_sim_runner.models import InstallRecord
 from career_sim_runner.paths import (
     active_install_path,
     ensure_runtime_dirs,
+    jiuwenswarm_data_dir,
     jiuwenswarm_skills_dir,
     jiuwenswarm_skills_state_path,
 )
@@ -22,6 +23,7 @@ from career_sim_runner.skill_contract import (
     resolve_skills_root,
     validate_submission_contract,
 )
+from career_sim_runner.utils import normalize_text
 
 
 def install_submission(
@@ -77,6 +79,7 @@ def install_submission(
             if (resolved_skills_dir / name).is_dir()
         }
     )
+    _write_identity_md(participant_skill_names, manifest)
     active_install_path().write_text(json.dumps(record.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
     return record
 
@@ -129,3 +132,23 @@ def _install_skill_bundle(submission_root: Path, resolved_skills_dir: Path) -> l
     for skill_name in participant_skill_names:
         shutil.copytree(submission_root / "skills" / skill_name, resolved_skills_dir / skill_name)
     return participant_skill_names
+
+
+def _write_identity_md(participant_skill_names: list[str], manifest: dict[str, Any]) -> None:
+    """Render and write IDENTITY.md to the agent workspace.
+
+    The content persists in the system prompt on every model call via
+    ContextAssembleRail, surviving context compression.
+    """
+    template_path = Path(__file__).resolve().parent / "prompts" / "identity.md"
+    template = template_path.read_text(encoding="utf-8")
+    skills_text = "- " + "\n- ".join(normalize_text(str(name)) for name in participant_skill_names)
+    raw_instruction = str(manifest.get("instruction") or "").strip()
+    instruction = normalize_text(raw_instruction) if raw_instruction else "（未提供额外策略指令）"
+    content = template.format(
+        participant_skills=skills_text,
+        instruction=instruction,
+    )
+    dest = jiuwenswarm_data_dir() / "agent" / "workspace" / "IDENTITY.md"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(content, encoding="utf-8")

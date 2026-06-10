@@ -13,11 +13,10 @@ import websockets
 from career_sim_runner.models import InstallRecord, TokenUsage
 from career_sim_runner.skill_contract import SubmissionError
 from career_sim_runner.transcript import EventCallback, StreamCollector, _walk
-from career_sim_runner.utils import normalize_text
 
 SESSION_ID_RE = re.compile(r"SESSION_ID=([0-9a-fA-F]{8,})")
 SUPPORTED_RUN_MODES = {"agent.fast", "agent.plan", "code.team"}
-MAX_CONTINUATIONS = 3
+MAX_CONTINUATIONS = 6
 _CAREER_MCP_PREFIX = "mcp_career-emulator_"
 _GAME_OVER_PREFIX = "GAME OVER:"
 
@@ -42,6 +41,8 @@ class _GameState:
     alive: bool = True
     failed: bool = False
     game_over: bool = False
+    last_month: int | None = None
+    last_year: int | None = None
 
     @property
     def ended(self) -> bool:
@@ -89,6 +90,11 @@ def _extract_game_signals(frame: dict[str, Any], state: _GameState) -> None:
             sid = current_state.get("session_id") or parsed.get("session_id")
             if isinstance(sid, str) and sid:
                 state.session_id = sid
+            time_info = current_state.get("time") or {}
+            if isinstance(time_info.get("current_month"), int):
+                state.last_month = time_info["current_month"]
+            if isinstance(time_info.get("current_year"), int):
+                state.last_year = time_info["current_year"]
             flags = current_state.get("simulation_flags") or {}
             if (flags.get("alive") is False) or (flags.get("failed") is True):
                 state.game_over = True
@@ -104,22 +110,23 @@ def _extract_game_signals(frame: dict[str, Any], state: _GameState) -> None:
             state.alive = False
 
 
-def build_play_prompt(install_record: InstallRecord) -> str:
+def build_play_prompt() -> str:
     """Build the prompt used for one headless playthrough."""
-    participant_skill_names = install_record.manifest.get("participant_skill_names", [])
-    participant_skills = "- " + "\n- ".join(normalize_text(str(name)) for name in participant_skill_names)
-    instruction = normalize_text(str(install_record.manifest.get("instruction") or "").strip())
-    prompt_template = _load_prompt_template("play_headless.md")
-    prompt = prompt_template.format(participant_skills=participant_skills)
-    if not instruction:
-        return prompt
-    instruction_template = _load_prompt_template("play_headless_extra.md")
-    return prompt + "\n\n" + instruction_template.format(instruction=instruction)
+    return _load_prompt_template("play_headless.md")
 
 
-def build_continue_prompt() -> str:
+def build_continue_prompt(game: _GameState | None = None) -> str:
     """Build the prompt used to resume an interrupted playthrough."""
-    return _load_prompt_template("play_headless_continue.md")
+    template = _load_prompt_template("play_headless_continue.md")
+    if game is None or game.session_id is None:
+        return template.replace("{session_id}", "unknown")
+    month_str = str(game.last_month) if game.last_month is not None else "?"
+    year_str = str(game.last_year) if game.last_year is not None else "?"
+    return template.format(
+        session_id=game.session_id,
+        month=month_str,
+        year=year_str,
+    )
 
 
 def _load_prompt_template(name: str) -> str:
@@ -196,16 +203,13 @@ async def reload_agent_config(ws_url: str, timeout_s: float = 15.0) -> bool:
     return False
 
 
-def _has_ended(game: _GameState, transcript: str) -> bool:
-    """Return whether the game has produced a final result.
+def _has_ended(game: _GameState) -> bool:
+    """Return whether the game has reached a terminal state.
 
-    Structured MCP signals (via ``_GameState``) are authoritative.
-    The transcript keyword check is a last-resort fallback for edge
-    cases where the agent prints "DONE" without a preceding MCP signal.
+    Only structured MCP signals (via ``_GameState``) are authoritative.
+    Transcript text is agent-controlled and must not be trusted.
     """
-    if game.ended:
-        return True
-    return "DONE" in transcript
+    return game.ended
 
 
 async def drive(
@@ -225,7 +229,7 @@ async def drive(
     collector = StreamCollector(log_dir=log_dir, on_event=on_event)
     game = _GameState()
     exit_code = 0
-    continue_prompt = _load_prompt_template("play_headless_continue.md")
+    skip_next_e2a_complete = False
 
     async with websockets.connect(ws_url, max_size=None, open_timeout=10) as ws:
         try:
@@ -264,13 +268,20 @@ async def drive(
                 break
 
             if is_final and kind in {"e2a.complete", "e2a.error"}:
-                if _has_ended(game, collector.transcript):
+                if skip_next_e2a_complete:
+                    skip_next_e2a_complete = False
+                    continue
+                if _has_ended(game):
                     break
                 if continuations >= MAX_CONTINUATIONS:
                     break
                 continuations += 1
-                cont_envelope = _build_envelope(continue_prompt, session_id, mode)
+                cont_prompt = build_continue_prompt(game)
+                cont_envelope = _build_envelope(cont_prompt, session_id, mode)
                 await ws.send(json.dumps(cont_envelope, ensure_ascii=False))
+                skip_next_e2a_complete = True
+            else:
+                skip_next_e2a_complete = False
 
     collector.finalize()
     game_session_id = game.session_id
@@ -279,8 +290,7 @@ async def drive(
         if match:
             game_session_id = match.group(1)
 
-    ended = _has_ended(game, collector.transcript)
-    if exit_code == 0 and not ended:
+    if exit_code == 0 and not _has_ended(game):
         exit_code = 1
 
     assert collector.events_path is not None
