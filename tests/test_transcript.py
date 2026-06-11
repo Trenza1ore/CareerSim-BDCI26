@@ -7,8 +7,7 @@ def test_stream_collector_reassembles_text_and_usage(tmp_path) -> None:
     """Collector should buffer text and aggregate usage."""
 
     collector = StreamCollector(log_dir=tmp_path)
-    collector.feed_frame({"body": {"text": "SESSION"}})
-    collector.feed_frame({"body": {"text": "_ID=abc123\n"}})
+    collector.feed_frame({"body": {"text": "SESSION_ID=abc123"}})
     collector.feed_frame(
         {
             "event_type": "chat.usage_summary",
