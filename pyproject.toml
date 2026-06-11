@@ -33,6 +33,7 @@ dependencies = [
     "career-emulator[bdci]>=0.1.14",
     "jiuwenswarm==0.2.1",
     "rich>=13",
+    "pyyaml",
 ]
 
 [dependency-groups]
@@ -46,6 +47,7 @@ format = [
     "ruff",
     "mypy",
     "types-aiofiles",
+    "types-pyyaml",
     "msgpack-types",
 ]
 
