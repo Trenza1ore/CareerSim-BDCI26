@@ -81,9 +81,9 @@ class StreamCollector:
         """Add one usage block into running totals."""
         bucket = self.totals.by_model.setdefault(
             model,
-            {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0},
+            {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0, "total_cost": 0.0},
         )
-        for key in ("input_tokens", "output_tokens", "total_tokens"):
+        for key in ("input_tokens", "output_tokens", "total_tokens", "total_cost"):
             value = int(usage.get(key, 0) or 0)
             setattr(self.totals, key, getattr(self.totals, key) + value)
             bucket[key] += value
