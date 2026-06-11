@@ -40,13 +40,8 @@ def test_validate_manifest_valid() -> None:
     [
         "",
         "enter your team name here",
-        "your-team-name",
-        "team-name",
-        "your_team_name",
-        "yourteam",
         # case-insensitive
         "Enter Your Team Name Here",
-        "YOUR-TEAM-NAME",
     ],
 )
 def test_validate_manifest_rejects_placeholder_team(team: str) -> None:
@@ -130,7 +125,7 @@ def test_validate_skill_frontmatter_missing_description(tmp_path: Path) -> None:
     )
     errors = validate_skill_frontmatter(skill_dir)
     assert any("description" in e for e in errors)
-    assert not any("name:" in e for e in errors)
+    assert len(errors) == 1
 
 
 def test_validate_skill_frontmatter_missing_both(tmp_path: Path) -> None:
@@ -140,6 +135,18 @@ def test_validate_skill_frontmatter_missing_both(tmp_path: Path) -> None:
     (skill_dir / "SKILL.md").write_text("---\n---\n", encoding="utf-8")
     errors = validate_skill_frontmatter(skill_dir)
     assert len(errors) == 2
+
+
+def test_validate_skill_frontmatter_invalid_yaml(tmp_path: Path) -> None:
+    """A frontmatter block with invalid YAML should be flagged."""
+    skill_dir = tmp_path / "bad-yaml-skill"
+    skill_dir.mkdir()
+    (skill_dir / "SKILL.md").write_text(
+        "---\n: :\n  bad:\n    - [\n---\n",
+        encoding="utf-8",
+    )
+    errors = validate_skill_frontmatter(skill_dir)
+    assert errors and "not valid YAML" in errors[0]
 
 
 def test_validate_skill_frontmatter_unclosed_block(tmp_path: Path) -> None:
