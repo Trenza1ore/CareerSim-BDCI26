@@ -22,7 +22,13 @@ from career_sim_runner.setup import (
     resolve_instance_ws_url,
     tool_availability,
 )
-from career_sim_runner.skill_contract import validate_submission_contract
+from career_sim_runner.skill_contract import (
+    list_bundle_skill_ids,
+    load_manifest,
+    validate_manifest,
+    validate_skill_frontmatter,
+    validate_submission_contract,
+)
 from career_sim_runner.ws_client import check_backend
 
 
@@ -139,13 +145,39 @@ async def validate_environment(ws_url: str | None = None, db_path: Path | None =
 def validate_submission(submission_dir: Path) -> ValidationReport:
     """Validate one participant submission."""
     report = ValidationReport()
+
+    # Layout check: manifest.json present and at least one skills/*/SKILL.md found.
     try:
         details = validate_submission_contract(submission_dir)
     except Exception as exc:  # pylint: disable=broad-exception-caught
-        report.add("submission-contract", False, str(exc))
+        report.add("submission-layout", False, str(exc))
         return report
-    report.add("submission-layout", True, f"Validated submission {details['submission_name']}")
-    report.add("skills-bundle", True, "Contestant SKILL bundles validated successfully")
+    report.add("submission-layout", True, f"Submission layout valid: {details['submission_name']}")
+
+    # Manifest field checks: team name and mode.
+    manifest = load_manifest(submission_dir)
+    manifest_errors = validate_manifest(manifest)
+    if manifest_errors:
+        for err in manifest_errors:
+            report.add("manifest-fields", False, err)
+    else:
+        report.add("manifest-fields", True, "manifest.json team and mode fields are valid")
+
+    # Per-skill SKILL.md frontmatter checks.
+    skill_ids = list_bundle_skill_ids(submission_dir)
+    frontmatter_errors: list[str] = []
+    for skill_id in skill_ids:
+        frontmatter_errors.extend(validate_skill_frontmatter(submission_dir / "skills" / skill_id))
+    if frontmatter_errors:
+        for err in frontmatter_errors:
+            report.add("skill-frontmatter", False, err)
+    else:
+        report.add(
+            "skill-frontmatter",
+            True,
+            f"All {len(skill_ids)} skill(s) have valid SKILL.md frontmatter",
+        )
+
     return report
 
 

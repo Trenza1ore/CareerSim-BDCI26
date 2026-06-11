@@ -497,7 +497,7 @@ wheels = [
 
 [[package]]
 name = "career-emulator"
-version = "0.1.9"
+version = "0.2.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiofiles" },
@@ -505,9 +505,9 @@ dependencies = [
     { name = "gitcode-api" },
     { name = "msgpack" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4c/55/1d7c5726a21807db0c5ae6912fa7e9b2c3a0a7e3d0cbab490cc000ec0a1c/career_emulator-0.1.9.tar.gz", hash = "sha256:bcde3b57285d62e7138c23384db706259ab7c9db0c9cf5be3c3a80f0128bcd0b", size = 64616, upload-time = "2026-06-04T20:53:56.565Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a8/af/cd15aedc67d1075e0e90d8ebc20f891b3e45d5b72436216a7041471914bf/career_emulator-0.2.5.tar.gz", hash = "sha256:468e2b4b991152064c1eb49970afa8142fb709aae1beeb211e5a78dd59c364f2", size = 71365, upload-time = "2026-06-11T15:47:18.522Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/93/5e/7a765cb1345f0a36a77c312dd68c6afce9861c6dbdb0a901aa1f366ef70d/career_emulator-0.1.9-py3-none-any.whl", hash = "sha256:f97de5ed8b8357f3ec0b32d9058234917f5c7eab7635f58a98f812e5285b97c6", size = 55369, upload-time = "2026-06-04T20:53:55.398Z" },
+    { url = "https://files.pythonhosted.org/packages/5e/c9/7a2d24d3426b05d56498fee6f2b8f648c46b50e47283f0911e06341e1869/career_emulator-0.2.5-py3-none-any.whl", hash = "sha256:c0475e9cc29d3c47712e42142c8eec0312036d4490e8cafed7a15f15e98524c6", size = 60022, upload-time = "2026-06-11T15:47:17.204Z" },
 ]
 
 [package.optional-dependencies]
@@ -518,11 +518,11 @@ bdci = [
 
 [[package]]
 name = "career-emulator-bdci26"
-version = "0.0.0.dev3"
+version = "0.0.0.dev7"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/15/74/9ad7dba9c13c6d686eed2ef00f2349e7b60b5913517ec36be8063b586993/career_emulator_bdci26-0.0.0.dev3.tar.gz", hash = "sha256:4b71fa2d7a78cfe9f15acb4c7ffd47494fb5cc9c4a0808796ffbe7d0dcc75cf5", size = 22190, upload-time = "2026-06-05T01:19:56.897Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/90/7f/e164c7a25d6132129d5042c3f2c23b500f17c9fd98f24855142928caa406/career_emulator_bdci26-0.0.0.dev7.tar.gz", hash = "sha256:5ed91bd37a98e842bc48f5eaf3cfb14e0ad7ccde51784dae63739b8f9434cf1a", size = 23298, upload-time = "2026-06-11T15:50:29.615Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f7/42/f6a03f58aa5e4525baa0c688bc75343d63296e88eaff8bf50fc8ab6a9ba9/career_emulator_bdci26-0.0.0.dev3-py3-none-any.whl", hash = "sha256:b9f00ad9a7a3fe110302ecb34ceab3598d5433007d33c277d1f24c37aadad19f", size = 24917, upload-time = "2026-06-05T01:19:55.558Z" },
+    { url = "https://files.pythonhosted.org/packages/7d/99/f53d2717cae8664c6961e185b3ce8399f6c2215dc246697a6f3870a4780e/career_emulator_bdci26-0.0.0.dev7-py3-none-any.whl", hash = "sha256:25d8a1658a7436a7bb0c0baf84eaba666974ba6ab9f790d14dd7b917650c3489", size = 26145, upload-time = "2026-06-11T15:50:28.563Z" },
 ]
 
 [[package]]
@@ -534,6 +534,7 @@ dependencies = [
     { name = "fastmcp" },
     { name = "jiuwenswarm" },
     { name = "pip" },
+    { name = "pyyaml" },
     { name = "rich" },
 ]
 
@@ -546,12 +547,14 @@ dev = [
     { name = "pytest-mock" },
     { name = "ruff" },
     { name = "types-aiofiles" },
+    { name = "types-pyyaml" },
 ]
 format = [
     { name = "msgpack-types" },
     { name = "mypy" },
     { name = "ruff" },
     { name = "types-aiofiles" },
+    { name = "types-pyyaml" },
 ]
 test = [
     { name = "pytest" },
@@ -561,10 +564,11 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "career-emulator", extras = ["bdci"] },
+    { name = "career-emulator", extras = ["bdci"], specifier = ">=0.1.14" },
     { name = "fastmcp", specifier = ">=2,<3" },
     { name = "jiuwenswarm", specifier = "==0.2.1" },
     { name = "pip" },
+    { name = "pyyaml" },
     { name = "rich", specifier = ">=13" },
 ]
 
@@ -577,12 +581,14 @@ dev = [
     { name = "pytest-mock" },
     { name = "ruff" },
     { name = "types-aiofiles" },
+    { name = "types-pyyaml" },
 ]
 format = [
     { name = "msgpack-types" },
     { name = "mypy" },
     { name = "ruff" },
     { name = "types-aiofiles" },
+    { name = "types-pyyaml" },
 ]
 test = [
     { name = "pytest" },
@@ -4943,6 +4949,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/df/42/f5b9b90162d2196f016b87228d6bf43f2c2c0c6501bfd5415001b3eb68bb/types_aiofiles-25.1.0.20260518.tar.gz", hash = "sha256:c0c95eb78755d4fa7b397d4f0332c632714dd7cd0d17f49b96e31d4d7a8d8c76", size = 14891, upload-time = "2026-05-18T06:05:27.804Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ca/3d/7a9ed9faafeae3aa3b5bc22fa5b979ff9cf3c83ecbe919b58eae07795b8c/types_aiofiles-25.1.0.20260518-py3-none-any.whl", hash = "sha256:f776bdfb4bec17f743d9ef042e61edf03bdcc7821fc08556fba9b63d873fdea9", size = 14377, upload-time = "2026-05-18T06:05:26.871Z" },
+]
+
+[[package]]
+name = "types-pyyaml"
+version = "6.0.12.20260518"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b8/83/4a1afc3fbfcf5b8d46fc390cd95ed6b0dc9010a265f4e9f46314efffa37a/types_pyyaml-6.0.12.20260518.tar.gz", hash = "sha256:d917f83fb38462550338c1297faedd860b3ec83912b96b1e3d73255f7473e466", size = 17850, upload-time = "2026-05-18T06:01:58.675Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/06/a2/c01db32be2ae7d6a1689972f3c492b149ee4e164b12fdfd9f64b50888215/types_pyyaml-6.0.12.20260518-py3-none-any.whl", hash = "sha256:d2150f75a231c9fe9c7463bd29487d93e60bac90400287351384bc2284eba7cd", size = 20312, upload-time = "2026-05-18T06:01:57.368Z" },
 ]
 
 [[package]]

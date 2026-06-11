@@ -10,12 +10,12 @@ from typing import Any
 
 import websockets
 
+from career_sim_runner.constants import SUPPORTED_RUN_MODES
 from career_sim_runner.models import InstallRecord, TokenUsage
 from career_sim_runner.skill_contract import SubmissionError
 from career_sim_runner.transcript import EventCallback, StreamCollector, _walk
 
 SESSION_ID_RE = re.compile(r"SESSION_ID=([0-9a-fA-F]{8,})")
-SUPPORTED_RUN_MODES = {"agent.fast", "agent.plan", "code.team"}
 MAX_CONTINUATIONS = 6
 _CAREER_MCP_PREFIX = "mcp_career-emulator_"
 _GAME_OVER_PREFIX = "GAME OVER:"
