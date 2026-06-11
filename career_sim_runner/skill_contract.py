@@ -6,6 +6,18 @@ from typing import Any
 
 from career_sim_runner.constants import (
     SUBMISSION_MODE_SKILL_BUNDLE,
+    SUPPORTED_RUN_MODES,
+)
+
+_PLACEHOLDER_TEAM_NAMES: frozenset[str] = frozenset(
+    {
+        "",
+        "enter your team name here",
+        "your-team-name",
+        "team-name",
+        "your_team_name",
+        "yourteam",
+    }
 )
 
 
@@ -35,6 +47,53 @@ def submission_name(submission_dir: Path, manifest: dict[str, Any]) -> str:
     if manifest.get("team") or manifest.get("name"):
         return str(manifest.get("team") or manifest.get("name"))
     return submission_dir.resolve().name
+
+
+def validate_manifest(manifest: dict[str, Any]) -> list[str]:
+    """Return error messages for invalid manifest fields.
+
+    Checks the ``team`` name (must not be blank or a known placeholder) and
+    the ``mode`` field (must be one of the supported JiuwenSwarm run modes).
+    Returns an empty list when everything is valid.
+    """
+    errors: list[str] = []
+    team = str(manifest.get("team") or "").strip()
+    if team.lower() in _PLACEHOLDER_TEAM_NAMES:
+        errors.append(
+            f"manifest.json 'team' is {team!r} — replace it with your actual team name"
+        )
+    mode = str(manifest.get("mode") or "").strip()
+    if mode not in SUPPORTED_RUN_MODES:
+        errors.append(
+            f"manifest.json 'mode' is {mode!r} — must be one of {sorted(SUPPORTED_RUN_MODES)}"
+        )
+    return errors
+
+
+def validate_skill_frontmatter(skill_dir: Path) -> list[str]:
+    """Return error messages for a SKILL.md with missing or malformed frontmatter.
+
+    A valid SKILL.md must open with a YAML front-matter block (``--- ... ---``)
+    that contains at least a ``name:`` and a ``description:`` field.  Returns
+    an empty list when everything is valid.
+    """
+    skill_md = skill_dir / "SKILL.md"
+    skill_name = skill_dir.name
+    if not skill_md.is_file():
+        return [f"{skill_name}/SKILL.md: file not found"]
+    text = skill_md.read_text(encoding="utf-8")
+    if not text.startswith("---"):
+        return [f"{skill_name}/SKILL.md: missing YAML frontmatter (file must start with ---)"]
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return [f"{skill_name}/SKILL.md: malformed frontmatter (no closing ---)"]
+    frontmatter = parts[1]
+    errors: list[str] = []
+    if "name:" not in frontmatter:
+        errors.append(f"{skill_name}/SKILL.md: frontmatter missing required 'name:' field")
+    if "description:" not in frontmatter:
+        errors.append(f"{skill_name}/SKILL.md: frontmatter missing required 'description:' field")
+    return errors
 
 
 def validate_submission_contract(submission_dir: Path) -> dict[str, Any]:
