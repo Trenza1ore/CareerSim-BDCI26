@@ -83,10 +83,13 @@ class StreamCollector:
             model,
             {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0, "total_cost": 0.0},
         )
-        for key in ("input_tokens", "output_tokens", "total_tokens", "total_cost"):
+        for key in ("input_tokens", "output_tokens", "total_tokens"):
             value = int(usage.get(key, 0) or 0)
             setattr(self.totals, key, getattr(self.totals, key) + value)
             bucket[key] += value
+        cost = float(usage.get("total_cost") or 0)
+        self.totals.total_cost += cost
+        bucket["total_cost"] += cost
 
     def _flush_text(self, force: bool = False) -> None:
         """Flush buffered text into the transcript file."""

@@ -47,7 +47,8 @@ class TokenUsage:
     input_tokens: int = 0
     output_tokens: int = 0
     total_tokens: int = 0
-    by_model: dict[str, dict[str, int]] = field(default_factory=dict)
+    total_cost: float = 0.0
+    by_model: dict[str, dict[str, int | float]] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON-safe dictionary."""

@@ -57,6 +57,7 @@ def _load_token_usage_from_report(output_dir: Path) -> TokenUsage:
             input_tokens=int(usage.get("input_tokens", 0)),
             output_tokens=int(usage.get("output_tokens", 0)),
             total_tokens=int(usage.get("total_tokens", 0)),
+            total_cost=float(usage.get("total_cost", 0)),
             by_model=by_model,
         )
     except (json.JSONDecodeError, KeyError, TypeError, ValueError):
