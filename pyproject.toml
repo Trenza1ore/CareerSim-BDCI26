@@ -31,7 +31,7 @@ dependencies = [
     "pip",
     "fastmcp>=2,<3",
     "career-emulator[bdci]>=0.2.1",
-    "jiuwenswarm==0.2.1",
+    "jiuwenswarm",
     "rich>=13",
     "pyyaml",
 ]
@@ -62,15 +62,17 @@ Documentation = "https://career-emulator.readthedocs.io"
 Source = "https://github.com/Trenza1ore/CareerSim-BDCI26"
 Gitcode = "https://gitcode.com/SushiNinja/CareerSim-BDCI26"
 
-[project.scripts]
-career-sim-runner = "career_sim_runner.cli:main"
-
 [tool.uv]
 default-groups = ['dev']
 
 [tool.setuptools.package-data]
 career_emulator = ["py.typed", "career_emulator/data/.gitkeep"]
 career_sim_runner = ["prompts/*.md"]
+
+[tool.uv.sources.jiuwenswarm]
+git = "https://github.com/openJiuwen-ai/jiuwenswarm"
+rev = "9a409a2915c5f847a5513a5df4f7c0aee394923c"
+lfs = false
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "function"
