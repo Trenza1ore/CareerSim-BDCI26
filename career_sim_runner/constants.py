@@ -26,7 +26,7 @@ CAREER_EMULATOR_ACTIVE_LONG_CHAIN_LIMIT: int = 1
 CAREER_EMULATOR_MONTHLY_EVENT_LIMIT: int = 3
 CAREER_EMULATOR_MAX_NOTE_LENGTH: int = 1000
 SUBMISSION_MODE_SKILL_BUNDLE: str = "skill_bundle"
-SUPPORTED_RUN_MODES: frozenset[str] = frozenset({"agent.fast", "agent.plan", "code.team"})
+SUPPORTED_RUN_MODES: frozenset[str] = frozenset({"agent.fast", "agent.plan", "team"})
 
 MEMORY_MD_CONTENT = """
 ### 长期记忆

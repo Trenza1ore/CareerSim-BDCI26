@@ -151,13 +151,12 @@ solution/
 ```
 
 `mode` 字段决定 [JiuwenSwarm](https://openjiuwen.com/jiuwenswarm) 以何种模式运行你的 Agent，支持以下几种：
-> 注意：`code.team` 模式下 JiuwenSwarm 使用英文系统提示词，建议 Skill 也用英文撰写以获得更好的效果。
 
 | mode | 说明 |
 |---|---|
 | `agent.plan` | 规划模式。启用任务规划、子代理编排和技能演进等能力，适合需要多步推理、长期策略的复杂任务。使用主动记忆，会更积极地检索和沉淀上下文。 |
 | `agent.fast` | 快速模式。卸载任务规划和子代理等重编排能力，保留通用工具和技能调用，侧重快速响应。使用被动记忆，按需读写。 |
-| `code.team` | 团队协作模式。以 Code 模式启动多 Agent 协作，Leader 统筹任务拆解与调度，Teammate 按角色分工并行执行。团队成员继承项目目录、代码工具和 MCP 能力，因此适合需要调用 MCP 工具（如本赛题的 `career-emulator`）的多 Agent 协同场景。|
+| `team` | 团队协作模式。启动多 Agent 协作，Leader 统筹任务拆解与调度，Teammate 按角色分工并行执行。团队成员继承项目目录、工具和 MCP 能力，适合需要多智能体协同的场景。|
 
 ## 一些方便的 Makefile 命令
 
