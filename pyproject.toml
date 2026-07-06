@@ -30,7 +30,7 @@ classifiers = [
 dependencies = [
     "pip",
     "fastmcp>=2,<3",
-    "career-emulator[bdci]>=0.2.1",
+    "career-emulator[bdci]>=0.2.7",
     "jiuwenswarm",
     "rich>=13",
     "pyyaml",

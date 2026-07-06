@@ -62,7 +62,7 @@ def test_validate_manifest_multiple_errors() -> None:
     assert len(errors) == 2
 
 
-@pytest.mark.parametrize("mode", ["agent.plan", "agent.fast", "code.team"])
+@pytest.mark.parametrize("mode", ["agent.plan", "agent.fast", "team"])
 def test_validate_manifest_all_supported_modes(mode: str) -> None:
     """Every documented mode should pass validation."""
     errors = validate_manifest({"team": "my-team", "mode": mode})
