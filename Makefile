@@ -45,7 +45,7 @@ lint:
 
 # Check docstring convention (with pydocstyle rules in ruff)
 docstring:
-	@uv run uv run ruff check --select D career_sim_runner/
+	@uv run ruff check --select D career_sim_runner/
 
 # Check format, docstring, typing
 check: format docstring lint

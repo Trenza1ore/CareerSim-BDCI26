@@ -18,11 +18,13 @@ class LiveReplayObserver:
     Pass :meth:`feed` as the ``on_event`` callback to
     :func:`~career_sim_runner.ws_client.drive` or
     :class:`~career_sim_runner.transcript.StreamCollector`.
-
-    :param console: Rich console to print to; creates a default one if ``None``.
     """
 
     def __init__(self, console: Console | None = None) -> None:
+        """Initialize a live-replay observer.
+
+        :param console: Rich console to print to; creates a default one if ``None``.
+        """
         self._console = console or Console()
         self._pending_observe: ObserveSnapshot | None = None
         self._current_month: int | None = None
