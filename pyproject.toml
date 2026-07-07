@@ -70,7 +70,7 @@ career_emulator = ["py.typed", "career_emulator/data/.gitkeep"]
 career_sim_runner = ["prompts/*.md"]
 
 [tool.uv.sources.jiuwenswarm]
-git = "https://github.com/openJiuwen-ai/jiuwenswarm"
+git = "https://gitcode.com/openJiuwen/jiuwenswarm"
 rev = "9a409a2915c5f847a5513a5df4f7c0aee394923c"
 lfs = false
 

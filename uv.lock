@@ -546,7 +546,7 @@ wheels = [
 
 [[package]]
 name = "career-emulator"
-version = "0.2.5"
+version = "0.2.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiofiles" },
@@ -554,9 +554,9 @@ dependencies = [
     { name = "gitcode-api" },
     { name = "msgpack" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a8/af/cd15aedc67d1075e0e90d8ebc20f891b3e45d5b72436216a7041471914bf/career_emulator-0.2.5.tar.gz", hash = "sha256:468e2b4b991152064c1eb49970afa8142fb709aae1beeb211e5a78dd59c364f2", size = 71365, upload-time = "2026-06-11T15:47:18.522Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/59/1c/d26c79055284ca2de0f8df75d011e8fd3ae26129e369cba5c0470f44a364/career_emulator-0.2.7.tar.gz", hash = "sha256:ecc3b6d3939dbe42c47450f5f4258085e5c5d45ee09a0e1ec58b37f0be33865a", size = 71698, upload-time = "2026-07-04T01:54:07.62Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5e/c9/7a2d24d3426b05d56498fee6f2b8f648c46b50e47283f0911e06341e1869/career_emulator-0.2.5-py3-none-any.whl", hash = "sha256:c0475e9cc29d3c47712e42142c8eec0312036d4490e8cafed7a15f15e98524c6", size = 60022, upload-time = "2026-06-11T15:47:17.204Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/f3/c9c453cae19a408e783e6f30fba3c88b9aaa8086cd01769244b9e9438f2e/career_emulator-0.2.7-py3-none-any.whl", hash = "sha256:3bf1e0e1563f4b0d29a7bad7037b509b98b1e6707dc1179195085c6e8a030cc6", size = 60105, upload-time = "2026-07-04T01:54:06.249Z" },
 ]
 
 [package.optional-dependencies]
@@ -613,9 +613,9 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "career-emulator", extras = ["bdci"], specifier = ">=0.2.1" },
+    { name = "career-emulator", extras = ["bdci"], specifier = ">=0.2.7" },
     { name = "fastmcp", specifier = ">=2,<3" },
-    { name = "jiuwenswarm", git = "https://github.com/openJiuwen-ai/jiuwenswarm?rev=9a409a2915c5f847a5513a5df4f7c0aee394923c" },
+    { name = "jiuwenswarm", git = "https://gitcode.com/openJiuwen/jiuwenswarm?rev=9a409a2915c5f847a5513a5df4f7c0aee394923c" },
     { name = "pip" },
     { name = "pyyaml" },
     { name = "rich", specifier = ">=13" },
@@ -1895,7 +1895,7 @@ wheels = [
 [[package]]
 name = "jiuwenswarm"
 version = "0.2.2"
-source = { git = "https://github.com/openJiuwen-ai/jiuwenswarm?rev=9a409a2915c5f847a5513a5df4f7c0aee394923c#9a409a2915c5f847a5513a5df4f7c0aee394923c" }
+source = { git = "https://gitcode.com/openJiuwen/jiuwenswarm?rev=9a409a2915c5f847a5513a5df4f7c0aee394923c#9a409a2915c5f847a5513a5df4f7c0aee394923c" }
 dependencies = [
     { name = "a2ui-agent-sdk" },
     { name = "aiosqlite" },
