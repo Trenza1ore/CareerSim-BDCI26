@@ -49,7 +49,8 @@ def ensure_instance_configured() -> Path:
     mcp = data.setdefault("mcp", {})
     is_available = tool_availability()
     cwd = is_available["path"]
-    if not is_available["career-emulator-mcp"]:
+    mcp_command = shutil.which("career-emulator-mcp", path=str(cwd))
+    if not is_available["career-emulator-mcp"] or not mcp_command:
         raise RuntimeError(
             f"\033[41mcareer-emulator[mcp]\033[0m is not installed in the same environment as JiuwenSwarm: {cwd}"
         )
@@ -58,8 +59,8 @@ def ensure_instance_configured() -> Path:
             "name": "career-emulator",
             "enabled": True,
             "transport": "stdio",
-            "command": "career-emulator-mcp",
-            "args": ["--update", "skip", "-c"],
+            "command": mcp_command,
+            "args": ["--update", "distribution", "-c"],
             "cwd": cwd,
             "env": {
                 "CAREER_EMULATOR_DB": str(default_db_path()),
@@ -143,11 +144,16 @@ def setup_summary() -> dict[str, str]:
 def tool_availability() -> dict[str, bool | str]:
     """Return whether key local commands are available."""
     jiuwenswarm_path = shutil.which("jiuwenswarm-start")
-    cwd = (jiuwenswarm_path or "").removesuffix("jiuwenswarm-start")
+    scripts_dir = Path(jiuwenswarm_path).resolve().parent if jiuwenswarm_path else None
+    search_path = str(scripts_dir) if scripts_dir else None
     return {
-        "career-emulator-mcp": Path(cwd, "career-emulator-mcp").exists() and Path(cwd, "fastmcp").exists(),
+        "career-emulator-mcp": bool(
+            scripts_dir
+            and shutil.which("career-emulator-mcp", path=search_path)
+            and shutil.which("fastmcp", path=search_path)
+        ),
         "jiuwenswarm-start": jiuwenswarm_path is not None,
-        "path": cwd,
+        "path": search_path or "",
     }
 
 
