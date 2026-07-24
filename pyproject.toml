@@ -71,7 +71,7 @@ career_sim_runner = ["prompts/*.md"]
 
 [tool.uv.sources.jiuwenswarm]
 git = "https://gitcode.com/openJiuwen/jiuwenswarm"
-rev = "9a409a2915c5f847a5513a5df4f7c0aee394923c"
+rev = "13735a1ba5dd74bb88d60095a033b60dca2bfffd"
 lfs = false
 
 [tool.pytest.ini_options]
