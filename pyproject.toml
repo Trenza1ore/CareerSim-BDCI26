@@ -59,7 +59,7 @@ dev = [
 [project.urls]
 Homepage = "https://www.xir.cn/competition/1165"
 Documentation = "https://career-emulator.readthedocs.io"
-Source = "https://github.com/Trenza1ore/CareerSim-BDCI26"
+Source = "https://github.com/openJiuwen-ai/CareerSim-BDCI26"
 Gitcode = "https://gitcode.com/SushiNinja/CareerSim-BDCI26"
 
 [tool.uv]
