@@ -51,7 +51,7 @@ def _check_dataset_ready() -> tuple[bool, str]:
 
     package_root = Path(inspect.getfile(career_emulator.failure_conditions)).resolve().parent
     condition_dir = package_root / "data" / "dataset" / "failure_conditions"
-    if list(condition_dir.glob("*.json")):
+    if list(condition_dir.glob("*.json")) + list(condition_dir.glob("*.data")):
         return True, f"Installed career-emulator dataset is available at {condition_dir}"
     return False, (
         f"Installed career-emulator dataset is missing under {condition_dir}. Run `uv run career-emulator update`."
