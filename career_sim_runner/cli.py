@@ -3,7 +3,9 @@
 import argparse
 import asyncio
 import json
+import sys
 from pathlib import Path
+from typing import TextIO
 
 from career_sim_runner.constants import DEFAULT_TIMEOUT_S
 from career_sim_runner.headless_play import (
@@ -31,6 +33,20 @@ from career_sim_runner.setup import (
     tool_availability,
 )
 from career_sim_runner.validate import validate_all
+
+
+def configure_stdio(stream: TextIO, encoding: str = "utf-8") -> None:
+    """Use UTF-8 for CLI output when the platform default cannot encode game text.
+
+    On Windows, ``sys.stdout`` often defaults to a legacy code page (for example
+    cp1252), which raises ``UnicodeEncodeError`` for Chinese event titles.
+    """
+    reconfigure = getattr(stream, "reconfigure", None)
+    if callable(reconfigure):
+        try:
+            reconfigure(encoding=encoding, errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass
 
 
 def _print_json(payload: object) -> None:
@@ -123,6 +139,11 @@ def _parse_args() -> argparse.Namespace:
 
 def main() -> int:
     """CLI entrypoint."""
+    for name in ("stdout", "stderr"):
+        stream = getattr(sys, name, None)
+        if stream is not None:
+            configure_stdio(stream)
+
     ensure_runtime_dirs()
     args = _parse_args()
 
